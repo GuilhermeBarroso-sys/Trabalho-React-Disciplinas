@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./styles.css";
+import swal from 'sweetalert2'
+import withReactContent from "sweetalert2-react-content";
 /**
  * 
  * Crie um app para cadastrar o período, disciplina, professor (a) e carga horária. Para os campos período e professor deve criar uma combo box (caixa de combinação) para o usuário escolher as opções. Os dados devem ser listados em formato de tabela na parte inferior do formulário e com a opção de excluir. Salve as informações no local storage.
@@ -17,8 +19,29 @@ function Home() {
   }
   const [schoolSubjects, setSchoolSubjects]= useState(getLocalStorage());
   const handleDeleteSubmit = (id) => {
-    const user = schoolSubjects.find(user => user.id == id);
-    setSchoolSubjects(schoolSubjects.filter(u => u.id != user.id))
+    swal.fire({
+      title: 'Tem certeza que deseja apagar?',
+      text: "Uma vez que o registro for excluido, não será possivel recuperar!",
+      icon: 'warning',
+      confirmButtonText: 'Excluir',
+      cancelButtonText: 'Cancelar',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const user = schoolSubjects.find(user => user.id == id);
+        setSchoolSubjects(schoolSubjects.filter(u => u.id != user.id))
+        swal.fire({
+          text: 'Registro deletado com sucesso!',
+          icon: 'success',
+          confirmButtonColor: '#33cc95'
+
+        })
+      }
+    })
+
+    
   } 
   
   useEffect(() => {
@@ -44,7 +67,7 @@ function Home() {
     
     <div className="page">
       <br/>
-      <h1>Cadastrar disciplinas</h1>
+      <span class = "headerTitle">Cadastrar disciplinas</span>
      
       <form onSubmit = {handleSubmit} className="register">
         <input
@@ -104,7 +127,7 @@ function Home() {
                 <td>
                   <button className = "buttonDelete" onClick = {() => {
                     handleDeleteSubmit(subject.id);
-                  }}><span className = "delete"> Delete </span></button>
+                  }}><span className = "delete"> Excluir </span></button>
                 </td>
               </tr>
          
