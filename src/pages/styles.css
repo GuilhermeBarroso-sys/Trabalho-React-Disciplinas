@@ -42,6 +42,7 @@ h1,h2,h3,h4,h5,h6,strong {
   font-size:2rem;
   color: gray;
 }
+
 .page {
   display: flex;
   flex-direction: column;

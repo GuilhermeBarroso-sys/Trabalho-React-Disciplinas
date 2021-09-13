@@ -17,6 +17,7 @@ function Home() {
     const itemsValue = JSON.parse(localStorageItems);
     return itemsValue;
   }
+  
   const [schoolSubjects, setSchoolSubjects]= useState(getLocalStorage());
   const handleDeleteSubmit = (id) => {
     swal.fire({
@@ -43,10 +44,36 @@ function Home() {
 
     
   } 
-  
+  useEffect(() => {
+    const deleteAll = document.getElementById('deleteAll');
+    schoolSubjects.length >= 2  ? deleteAll.style.display = "flex" : deleteAll.style.display = "none" 
+  }, [schoolSubjects])
   useEffect(() => {
     localStorage.setItem('@regschoolSubjects:schoolSubjects', JSON.stringify(schoolSubjects));
-  }, [schoolSubjects])
+  }, [schoolSubjects]);
+
+  const handleDeleteAll = () => {
+    swal.fire({
+      title: 'Tem certeza que deseja apagar?',
+      text: "Você está prestes a excluir TODOS os registros!",
+      icon: 'error',
+      confirmButtonText: 'Excluir',
+      cancelButtonText: 'Cancelar',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setSchoolSubjects([]);
+        swal.fire({
+          text: 'Registros deletados com sucesso!',
+          icon: 'success',
+          confirmButtonColor: '#33cc95'
+
+        })
+      }
+    })
+  }
   const handleSubmit = (e) => {
     e.preventDefault();
     setSchoolSubjects([...schoolSubjects, {
@@ -58,16 +85,11 @@ function Home() {
 
     }]);
   }
-  // const handleRemoveItem = (index) => {
-  //   schoolSubjects.splice(index, 1);
-  //   console.log("a");
-  //   setSchoolSubjects([...schoolSubjects]);
-  // }
   return (
     
     <div className="page">
       <br/>
-      <span class = "headerTitle">Cadastrar disciplinas</span>
+      <span className = "headerTitle">Cadastrar disciplinas</span>
      
       <form onSubmit = {handleSubmit} className="register">
         <input
@@ -103,10 +125,12 @@ function Home() {
         </select>
         <button type="submit">Enviar</button>
       </form>
-      
+      <br />
+      <button className = "buttonDelete" id = "deleteAll" onClick = {handleDeleteAll}>Excluir todos</button>
       <br/>
       <table>
         <thead>
+      
           <tr>
             <th>Nome da disciplina</th>
             <th>Carga Horaria</th>
@@ -135,6 +159,7 @@ function Home() {
           })}
         </tbody>
       </table>
+      
       <div id = "errors"></div>
       
     </div>
